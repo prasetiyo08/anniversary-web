@@ -9,9 +9,12 @@ const DATA = {
   startDate: "2025-03-06", // Tepat 365 hari pada 6 Maret 2026
   musicUrl: "https://raw.githubusercontent.com/prasetiyo08/anniversary_pict/main/Anniv/Iron%20&%20Wine%20-%20Flightless%20Bird,%20American%20Mouth.mp3",
   stories: [
-    { text: "Since meeting you, my KKN has felt very colorful...", img: "https://raw.githubusercontent.com/prasetiyo08/anniversary_pict/main/Anniv/A.JPG" },
-    { text: "We've shared so many laughs...", img: "https://raw.githubusercontent.com/prasetiyo08/anniversary_pict/main/Anniv/B.jpeg" },
-    { text: "I promise to keep choosing you...", img: "https://raw.githubusercontent.com/prasetiyo08/anniversary_pict/main/Anniv/C.jpeg" },
+    { text: "Since meeting you, my KKN has felt very colorful, nothing can beat that moment in my life, nothing can replace it, you are so beautiful in my heart. Your smile has a way of brightening even my darkest days, and I'm so grateful to have you by my side.",
+       img: "https://raw.githubusercontent.com/prasetiyo08/anniversary_pict/main/Anniv/A.JPG" },
+    { text: "We've shared so many laughs, weathered so many storms, and we've built memories I'll cherish forever. You're not just my nyanya, but also my most comfortable place, my home.",
+       img: "https://raw.githubusercontent.com/prasetiyo08/anniversary_pict/main/Anniv/B.jpeg" },
+    { text: "I promise to keep choosing you every single day. Happy Anniversary, Intan. I look forward to many more years of happiness and growth with you.",
+       img: "https://raw.githubusercontent.com/prasetiyo08/anniversary_pict/main/Anniv/C.jpeg" },
   ],
 };
 
