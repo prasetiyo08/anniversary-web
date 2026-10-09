@@ -7,7 +7,7 @@ import confetti from "canvas-confetti";
 const DATA = {
   recipient: "Intan Putri Wulandari",
   startDate: "2025-03-08", // Tepat 365 hari pada 6 Maret 2026
-  musicUrl: "https://raw.githubusercontent.com/prasetiyo08/anniversary_pict/main/Anniv/Iron%20&%20Wine%20-%20Flightless%20Bird,%20American%20Mouth.mp3",
+  musicUrl: "/music/All%20We%20Are.mp3",
   stories: [
     { text: "Since meeting you, my KKN has felt very colorful, nothing can beat that moment in my life, nothing can replace it, you are so beautiful in my heart. Your smile has a way of brightening even my darkest days, and I'm so grateful to have you by my side.",
        img: "https://raw.githubusercontent.com/prasetiyo08/anniversary_pict/main/Anniv/A.JPG" },
