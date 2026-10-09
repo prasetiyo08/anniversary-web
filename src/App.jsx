@@ -6,7 +6,7 @@ import confetti from "canvas-confetti";
 // --- DATA KONTEN ---
 const DATA = {
   recipient: "Intan Putri Wulandari",
-  startDate: "2025-03-08", // Tepat 365 hari pada 6 Maret 2026
+  startDate: "2025-03-08",
   musicUrl: "/music/All%20We%20Are.mp3",
   stories: [
     { text: "Since meeting you, my KKN has felt very colorful, nothing can beat that moment in my life, nothing can replace it, you are so beautiful in my heart. Your smile has a way of brightening even my darkest days, and I'm so grateful to have you by my side.",
@@ -36,7 +36,7 @@ const FloatingHearts = () => {
           initial={{ opacity: 0, y: -50, x: `${heart.x}vw` }}
           animate={{ opacity: [0, 1, 1, 0], y: '100vh', rotate: Math.random() * 360 }}
           transition={{ duration: heart.duration, delay: heart.delay, ease: 'linear', repeat: Infinity }}
-          style={{ position: 'absolute', top: 0, fontSize: `${heart.size}px`, color: 'rgba(248, 251, 248, 0.5)' }}
+          style={{ position: 'absolute', top: 0, fontSize: `${heart.size}px`, color: 'rgba(248, 251, 248, 0.7)' }}
         >
           ❤️
         </motion.div>
@@ -60,7 +60,6 @@ export default function App() {
     setDays(Math.floor((now - start) / (1000 * 60 * 60 * 24)));
   }, []);
 
-  // Pop-up muncul dengan jeda 3 detik setelah scroll sampai bawah
   useEffect(() => {
     let timer;
     if (journeyStarted && !popUpAnswered) {
@@ -87,7 +86,6 @@ export default function App() {
       audioRef.current.play().catch((err) => console.log(err));
     }
 
-    // ANIMASI KEMBANG API MERIAH (Side Cannons)
     const duration = 5 * 1000;
     const animationEnd = Date.now() + duration;
     const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
@@ -111,23 +109,21 @@ export default function App() {
     }
   };
 
-  // --- MODIFIKASI: ANIMASI LAVENDER MEWAH YANG DITINGKATKAN ---
   const triggerLavenderExplosion = () => {
     const duration = 10 * 1000;
     const animationEnd = Date.now() + duration;
 
     const frame = () => {
-      // Kelopak lavender jatuh secara elegan dari berbagai sisi atas layar
       confetti({
         particleCount: 2,
         angle: Math.random() * 360,
         spread: 55,
-        origin: { x: Math.random(), y: -0.1 }, // Jatuh dari atas layar
+        origin: { x: Math.random(), y: -0.1 },
         colors: ["#E6E6FA", "#D8BFD8", "#B19CD9", "#FFFFFF"],
         ticks: 300,
-        gravity: 0.5, // Jatuh lebih lambat & anggun
-        scalar: Math.random() * 0.5 + 0.8, // Ukuran variatif
-        drift: Math.random() * 1 - 0.5 // Goyangan tertiup angin
+        gravity: 0.5,
+        scalar: Math.random() * 0.5 + 0.8,
+        drift: Math.random() * 1 - 0.5 
       });
 
       if (Date.now() < animationEnd) {
@@ -138,7 +134,18 @@ export default function App() {
   };
 
   return (
-    <div style={{ backgroundColor: "#9DC183", color: "#F8FBF8", minHeight: "100vh", fontFamily: "'Playfair Display', serif", overflowX: 'hidden' }}>
+    <div style={{ 
+      /* --- MODIFIKASI BACKGROUND DISINI --- */
+      backgroundImage: "url('/background.png')", 
+      backgroundSize: "cover", // Membuat gambar memenuhi layar
+      backgroundPosition: "center", // Posisi gambar di tengah
+      backgroundAttachment: "fixed", // INI YANG MEMBUAT BACKGROUND DIAM SAAT DI-SCROLL
+      backgroundRepeat: "no-repeat", // Mencegah gambar berulang
+      color: "#F8FBF8", 
+      minHeight: "100vh", 
+      fontFamily: "'Playfair Display', serif", 
+      overflowX: 'hidden' 
+    }}>
       <audio ref={audioRef} src={DATA.musicUrl} loop />
 
       {showHearts && <FloatingHearts />}
@@ -154,12 +161,17 @@ export default function App() {
       <AnimatePresence mode="wait">
         {!journeyStarted ? (
           <motion.div key="overlay" exit={{ opacity: 0, scale: 1.08, filter: "blur(15px)" }} transition={{ duration: 2.8, ease: [0.43, 0.13, 0.23, 0.96] }}
-            style={{ position: "fixed", inset: 0, zIndex: 100, backgroundColor: "#9DC183", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}
+            style={{ 
+              position: "fixed", inset: 0, zIndex: 100, 
+              backgroundColor: "rgba(0, 0, 0, 0.5)", // Memberikan efek gelap agar teks terbaca, namun background tetap terlihat
+              backdropFilter: "blur(3px)", // Memberikan efek blur tipis
+              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" 
+            }}
           >
-            <motion.h1 initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.8 }} style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", marginBottom: "30px", fontWeight: "lighter", letterSpacing: "2px" }}>
+            <motion.h1 initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.8 }} style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", marginBottom: "30px", fontWeight: "lighter", letterSpacing: "2px", textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}>
               For You, <br /> {DATA.recipient}
             </motion.h1>
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={startJourney} style={{ padding: "18px 50px", backgroundColor: "#F8FBF8", color: "#9DC183", border: "none", borderRadius: "40px", fontWeight: "bold", cursor: "pointer", fontSize: "1.1rem", boxShadow: "0 10px 25px rgba(0,0,0,0.1)" }}>
+            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={startJourney} style={{ padding: "18px 50px", backgroundColor: "rgba(255, 255, 255, 0.2)", color: "#F8FBF8", border: "2px solid white", borderRadius: "40px", fontWeight: "bold", cursor: "pointer", fontSize: "1.1rem", backdropFilter: "blur(10px)", boxShadow: "0 10px 25px rgba(0,0,0,0.2)" }}>
               Open Letter
             </motion.button>
           </motion.div>
@@ -167,34 +179,34 @@ export default function App() {
           <motion.div key="content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 3.5, delay: 0.8 }}>
             
             {/* HERO SECTION */}
-            <section style={{ height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "20px" }}>
-              <p style={{ letterSpacing: "5px", marginBottom: "15px", opacity: 0.8 }}>DEAR INTAN,</p>
-              <h2 style={{ fontSize: "clamp(2.5rem, 8vw, 4.5rem)", marginBottom: "40px", fontWeight: "bold" }}>Happy Anniversary</h2>
+            <section style={{ height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "20px", backgroundColor: "rgba(0,0,0,0.2)" }}>
+              <p style={{ letterSpacing: "5px", marginBottom: "15px", opacity: 0.9, textShadow: "1px 1px 3px rgba(0,0,0,0.5)" }}>DEAR INTAN,</p>
+              <h2 style={{ fontSize: "clamp(2.5rem, 8vw, 4.5rem)", marginBottom: "40px", fontWeight: "bold", textShadow: "2px 2px 5px rgba(0,0,0,0.5)" }}>Happy Anniversary</h2>
               <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 2, delay: 1.5 }}
-                style={{ width: "200px", height: "200px", borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.15)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", border: "2px solid rgba(255,255,255,0.5)", backdropFilter: "blur(10px)", boxShadow: "0 15px 35px rgba(0,0,0,0.05)" }}
+                style={{ width: "200px", height: "200px", borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.15)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", border: "2px solid rgba(255,255,255,0.5)", backdropFilter: "blur(10px)", boxShadow: "0 15px 35px rgba(0,0,0,0.2)" }}
               >
-                <span style={{ fontSize: "4rem", fontWeight: "bold" }}>{days}</span>
-                <span style={{ fontSize: "0.8rem", letterSpacing: "3px" }}>DAYS TOGETHER</span>
+                <span style={{ fontSize: "4rem", fontWeight: "bold", textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}>{days}</span>
+                <span style={{ fontSize: "0.8rem", letterSpacing: "3px", textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>DAYS TOGETHER</span>
               </motion.div>
-              <p style={{ marginTop: "50px", maxWidth: "650px", fontSize: "1.2rem", fontStyle: "italic", lineHeight: "1.8", opacity: 0.9 }}>
+              <p style={{ marginTop: "50px", maxWidth: "650px", fontSize: "1.2rem", fontStyle: "italic", lineHeight: "1.8", opacity: 0.9, textShadow: "1px 1px 3px rgba(0,0,0,0.5)" }}>
                 "Today is a celebration of us, and the beautiful journey we've embarked upon."
               </p>
-              <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }} style={{ marginTop: "60px", opacity: 0.7 }}> ↓ Scroll Down My Love ↓ </motion.div>
+              <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }} style={{ marginTop: "60px", opacity: 0.9, textShadow: "1px 1px 3px rgba(0,0,0,0.5)" }}> ↓ Scroll Down My Love ↓ </motion.div>
             </section>
 
             {/* STORIES SECTION */}
-            <section style={{ padding: "40px 20px", maxWidth: "1100px", margin: "0 auto" }}>
+            <section style={{ padding: "80px 20px", maxWidth: "1100px", margin: "0 auto", backgroundColor: "rgba(0,0,0,0.3)", borderRadius: "20px", marginTop: "20px" }}>
               {DATA.stories.map((item, index) => (
                 <motion.div key={index} initial={{ opacity: 0, y: 80 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 1.5, ease: "easeOut" }}
                   style={{ display: "flex", flexDirection: window.innerWidth < 768 ? "column" : index % 2 === 0 ? "row" : "row-reverse", alignItems: "center", gap: "60px", marginBottom: "150px" }}
                 >
                   <div style={{ flex: 1, width: "100%" }}>
-                    <motion.div whileHover={{ scale: 1.02 }} style={{ backgroundColor: "#FDF5E6", padding: "15px", borderRadius: "10px", boxShadow: "0 15px 40px rgba(0,0,0,0.15)", border: "1px solid #F5F5DC" }}>
+                    <motion.div whileHover={{ scale: 1.02 }} style={{ backgroundColor: "rgba(255,255,255,0.1)", padding: "15px", borderRadius: "10px", boxShadow: "0 15px 40px rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.3)", backdropFilter: "blur(5px)" }}>
                       <img src={item.img} alt="Memories" style={{ width: "100%", height: "450px", objectFit: "cover", borderRadius: "4px" }} />
                     </motion.div>
                   </div>
                   <div style={{ flex: 1.2, textAlign: index % 2 === 0 ? "left" : "right" }}>
-                    <p style={{ fontSize: "1.35rem", lineHeight: "2", backgroundColor: "rgba(255,255,255,0.08)", padding: "35px", borderRadius: "25px", border: "1px solid rgba(255,255,255,0.1)" }}>
+                    <p style={{ fontSize: "1.35rem", lineHeight: "2", backgroundColor: "rgba(0,0,0,0.4)", padding: "35px", borderRadius: "25px", border: "1px solid rgba(255,255,255,0.2)", backdropFilter: "blur(10px)", textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
                       {item.text}
                     </p>
                   </div>
@@ -202,42 +214,42 @@ export default function App() {
               ))}
             </section>
 
-            <footer style={{ padding: "150px 20px", textAlign: "center", background: "linear-gradient(transparent, rgba(0,0,0,0.1))" }}>
+            <footer style={{ padding: "150px 20px", textAlign: "center", background: "linear-gradient(transparent, rgba(0,0,0,0.5))" }}>
               <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 2, repeat: Infinity }} style={{ marginBottom: "30px" }}>
-                <Heart fill="#F8FBF8" size={56} color="#F8FBF8" />
+                <Heart fill="#F8FBF8" size={56} color="#F8FBF8" style={{ filter: "drop-shadow(0px 0px 5px rgba(255,255,255,0.5))" }} />
               </motion.div>
-              <h3 style={{ fontSize: "2.5rem", marginBottom: "15px" }}>I Love You, {DATA.recipient}</h3>
-              <p style={{ fontSize: "1.1rem", opacity: 0.8 }}>Always and Forever.</p>
-              <div style={{ marginTop: "100px", fontSize: "0.8rem", opacity: 0.5 }}> Made with ❤️ by Prasetiyo </div>
+              <h3 style={{ fontSize: "2.5rem", marginBottom: "15px", textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}>I Love You, {DATA.recipient}</h3>
+              <p style={{ fontSize: "1.1rem", opacity: 0.9, textShadow: "1px 1px 3px rgba(0,0,0,0.5)" }}>Always and Forever.</p>
+              <div style={{ marginTop: "100px", fontSize: "0.8rem", opacity: 0.7, textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}> Made with ❤️ by Prasetiyo </div>
             </footer>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* FINAL POP-UP DENGAN ANIMASI SOFT */}
+      {/* FINAL POP-UP */}
       <AnimatePresence>
         {showPopUp && (
           <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             transition={{ duration: 1.2 }}
-            style={{ position: 'fixed', inset: 0, zIndex: 2000, backgroundColor: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', backdropFilter: 'blur(5px)' }}
+            style={{ position: 'fixed', inset: 0, zIndex: 2000, backgroundColor: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', backdropFilter: 'blur(8px)' }}
           >
             <motion.div 
               initial={{ scale: 0.7, y: 20, opacity: 0 }} animate={{ scale: 1, y: 0, opacity: 1 }}
               transition={{ duration: 1, ease: "easeOut" }}
-              style={{ backgroundColor: '#F8FBF8', color: '#9DC183', padding: '40px', borderRadius: '30px', textAlign: 'center', maxWidth: '400px', boxShadow: '0 20px 50px rgba(0,0,0,0.3)' }}
+              style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', color: '#333', padding: '40px', borderRadius: '30px', textAlign: 'center', maxWidth: '400px', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}
             >
-              <Heart fill="#9DC183" size={48} style={{ marginBottom: '20px', margin: '0 auto' }} />
+              <Heart fill="#E74C3C" size={48} style={{ marginBottom: '20px', margin: '0 auto' }} />
               <h2 style={{ fontSize: '1.8rem', marginBottom: '20px' }}>One last thing...</h2>
               <p style={{ marginBottom: '30px', lineHeight: '1.6', color: '#555' }}>Will you continue this beautiful journey with me for the next 365 days and beyond?</p>
               <button 
                 onClick={() => {
-                  triggerLavenderExplosion(); // Efek kelopak lavender jatuh dari atas
+                  triggerLavenderExplosion();
                   setPopUpAnswered(true);
                   setShowPopUp(false);
                   setTimeout(() => alert("I love you more than words can say! My heart is yours forever. ❤️"), 2000);
                 }}
-                style={{ padding: '12px 35px', backgroundColor: '#9DC183', color: 'white', border: 'none', borderRadius: '25px', fontWeight: 'bold', cursor: 'pointer' }}
+                style={{ padding: '12px 35px', backgroundColor: '#E74C3C', color: 'white', border: 'none', borderRadius: '25px', fontWeight: 'bold', cursor: 'pointer', boxShadow: "0 4px 15px rgba(231, 76, 60, 0.4)" }}
               >
                 Yes, I will! ❤️
               </button>
