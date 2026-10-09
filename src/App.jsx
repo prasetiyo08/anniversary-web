@@ -8,6 +8,7 @@ const DATA = {
   recipient: "Intan Putri Wulandari",
   startDate: "2025-03-08",
   musicUrl: "/music/All%20We%20Are.mp3",
+  rainMusicUrl: "/music/rain.mp3", 
   stories: [
     { text: "Since meeting you, my KKN has felt very colorful, nothing can beat that moment in my life, nothing can replace it, you are so beautiful in my heart. Your smile has a way of brightening even my darkest days, and I'm so grateful to have you by my side.",
        img: "https://raw.githubusercontent.com/prasetiyo08/anniversary_pict/main/Anniv/A.JPG" },
@@ -18,30 +19,43 @@ const DATA = {
   ],
 };
 
-// --- KOMPONEN HUJAN LOVE ---
-const FloatingHearts = () => {
-  const hearts = Array.from({ length: 25 }).map((_, i) => ({
+// --- EFEK HUJAN (DIPERJELAS) ---
+const CustomRainEffect = () => {
+  const rainDrops = Array.from({ length: 60 }).map((_, i) => ({
     id: i,
-    size: Math.random() * 10 + 8,
-    x: Math.random() * 100,
-    delay: Math.random() * 5,
-    duration: Math.random() * 3 + 5,
+    left: Math.random() * 100,
+    delay: Math.random() * 2,
+    duration: Math.random() * 0.8 + 0.8, 
+    opacity: Math.random() * 0.6 + 0.4 
   }));
 
   return (
     <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 1, overflow: 'hidden' }}>
-      {hearts.map((heart) => (
+      {rainDrops.map((drop) => (
         <motion.div
-          key={heart.id}
-          initial={{ opacity: 0, y: -50, x: `${heart.x}vw` }}
-          animate={{ opacity: [0, 1, 1, 0], y: '100vh', rotate: Math.random() * 360 }}
-          transition={{ duration: heart.duration, delay: heart.delay, ease: 'linear', repeat: Infinity }}
-          style={{ position: 'absolute', top: 0, fontSize: `${heart.size}px`, color: 'rgba(248, 251, 248, 0.7)' }}
-        >
-          ❤️
-        </motion.div>
+          key={drop.id}
+          initial={{ y: '-10vh', x: `${drop.left}vw`, opacity: 0 }}
+          animate={{ y: '110vh', x: `${drop.left - 10}vw`, opacity: drop.opacity }}
+          transition={{ duration: drop.duration, delay: drop.delay, ease: 'linear', repeat: Infinity }}
+          style={{ position: 'absolute', top: 0, width: '3px', height: '50px', background: 'linear-gradient(transparent, rgba(255,255,255,1))', borderRadius: '50%', boxShadow: '0 0 5px rgba(255,255,255,0.5)' }}
+        />
       ))}
     </div>
+  );
+};
+
+// --- EFEK KILAT (PETIR) ---
+const LightningEffect = () => {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ 
+        opacity: [0, 0, 0.8, 0, 0, 0.4, 0, 0, 0, 0, 0, 0, 0, 0],
+        background: ["transparent", "transparent", "rgba(255,255,255,0.5)", "transparent", "transparent", "rgba(220,180,255,0.3)", "transparent"] 
+      }}
+      transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+      style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0 }}
+    />
   );
 };
 
@@ -52,7 +66,9 @@ export default function App() {
   const [showHearts, setShowHearts] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false);
   const [popUpAnswered, setPopUpAnswered] = useState(false);
+  
   const audioRef = useRef(null);
+  const rainAudioRef = useRef(null); 
 
   useEffect(() => {
     const start = new Date(DATA.startDate);
@@ -81,9 +97,15 @@ export default function App() {
 
   const startJourney = () => {
     setJourneyStarted(true);
+    
     if (audioRef.current) {
       audioRef.current.volume = 0.6;
       audioRef.current.play().catch((err) => console.log(err));
+    }
+    
+    if (rainAudioRef.current) {
+      rainAudioRef.current.volume = 0.5; 
+      rainAudioRef.current.play().catch((err) => console.log(err));
     }
 
     const duration = 5 * 1000;
@@ -103,10 +125,10 @@ export default function App() {
   };
 
   const toggleMute = () => {
-    if (audioRef.current) {
-      audioRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
-    }
+    const newMuteState = !isMuted;
+    setIsMuted(newMuteState);
+    if (audioRef.current) audioRef.current.muted = newMuteState;
+    if (rainAudioRef.current) rainAudioRef.current.muted = newMuteState;
   };
 
   const triggerLavenderExplosion = () => {
@@ -133,80 +155,90 @@ export default function App() {
     frame();
   };
 
+  // --- WARNA TEKS BARU: Ungu Gelap Lembut ---
+  const glowingText = {
+    color: "#6A4C93", // Ungu Gelap Lembut
+    textShadow: "0 0 15px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.8), 1px 1px 2px rgba(255, 255, 255, 1)"
+  };
+
   return (
     <div style={{ 
-      /* --- MODIFIKASI BACKGROUND DISINI --- */
-      backgroundImage: "url('/background.png')", 
-      backgroundSize: "cover", // Membuat gambar memenuhi layar
-      backgroundPosition: "center", // Posisi gambar di tengah
-      backgroundAttachment: "fixed", // INI YANG MEMBUAT BACKGROUND DIAM SAAT DI-SCROLL
-      backgroundRepeat: "no-repeat", // Mencegah gambar berulang
-      color: "#F8FBF8", 
+      backgroundImage: "url('/background/bg.png')", 
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundAttachment: "fixed",
+      backgroundRepeat: "no-repeat",
       minHeight: "100vh", 
       fontFamily: "'Playfair Display', serif", 
       overflowX: 'hidden' 
     }}>
       <audio ref={audioRef} src={DATA.musicUrl} loop />
+      <audio ref={rainAudioRef} src={DATA.rainMusicUrl} loop autoPlay />
 
-      {showHearts && <FloatingHearts />}
+      {journeyStarted && <LightningEffect />}
+      {showHearts && <CustomRainEffect />}
 
       {journeyStarted && (
         <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={toggleMute}
-          style={{ position: "fixed", bottom: "30px", right: "30px", zIndex: 1000, background: "rgba(255,255,255,0.2)", border: "2px solid white", borderRadius: "50%", padding: "12px", cursor: "pointer", backdropFilter: "blur(8px)" }}
+          style={{ position: "fixed", bottom: "30px", right: "30px", zIndex: 1000, background: "rgba(255,255,255,0.4)", border: "1px solid rgba(255,255,255,0.9)", borderRadius: "50%", padding: "12px", cursor: "pointer", backdropFilter: "blur(5px)", boxShadow: "0 5px 15px rgba(0,0,0,0.1)" }}
         >
-          {isMuted ? <VolumeX size={24} color="white" /> : <Volume2 size={24} color="white" />}
+          {isMuted ? <VolumeX size={24} color="#6A4C93" /> : <Volume2 size={24} color="#6A4C93" />}
         </motion.button>
       )}
 
       <AnimatePresence mode="wait">
         {!journeyStarted ? (
-          <motion.div key="overlay" exit={{ opacity: 0, scale: 1.08, filter: "blur(15px)" }} transition={{ duration: 2.8, ease: [0.43, 0.13, 0.23, 0.96] }}
+          <motion.div key="overlay" exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }} transition={{ duration: 2, ease: "easeInOut" }}
             style={{ 
               position: "fixed", inset: 0, zIndex: 100, 
-              backgroundColor: "rgba(0, 0, 0, 0.5)", // Memberikan efek gelap agar teks terbaca, namun background tetap terlihat
-              backdropFilter: "blur(3px)", // Memberikan efek blur tipis
+              backgroundColor: "rgba(255, 255, 255, 0.3)", 
+              backdropFilter: "blur(5px)", 
               display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" 
             }}
           >
-            <motion.h1 initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.8 }} style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", marginBottom: "30px", fontWeight: "lighter", letterSpacing: "2px", textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}>
+            <motion.h1 initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.8 }} style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", marginBottom: "30px", fontWeight: "800", letterSpacing: "2px", ...glowingText }}>
               For You, <br /> {DATA.recipient}
             </motion.h1>
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={startJourney} style={{ padding: "18px 50px", backgroundColor: "rgba(255, 255, 255, 0.2)", color: "#F8FBF8", border: "2px solid white", borderRadius: "40px", fontWeight: "bold", cursor: "pointer", fontSize: "1.1rem", backdropFilter: "blur(10px)", boxShadow: "0 10px 25px rgba(0,0,0,0.2)" }}>
+            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={startJourney} style={{ padding: "18px 50px", backgroundColor: "#fff", color: "#6A4C93", border: "none", borderRadius: "40px", fontWeight: "bold", cursor: "pointer", fontSize: "1.1rem", boxShadow: "0 10px 25px rgba(0,0,0,0.15)", letterSpacing: "1px" }}>
               Open Letter
             </motion.button>
           </motion.div>
         ) : (
-          <motion.div key="content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 3.5, delay: 0.8 }}>
+          <motion.div key="content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 3.5, delay: 0.5 }}>
             
-            {/* HERO SECTION */}
-            <section style={{ height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "20px", backgroundColor: "rgba(0,0,0,0.2)" }}>
-              <p style={{ letterSpacing: "5px", marginBottom: "15px", opacity: 0.9, textShadow: "1px 1px 3px rgba(0,0,0,0.5)" }}>DEAR INTAN,</p>
-              <h2 style={{ fontSize: "clamp(2.5rem, 8vw, 4.5rem)", marginBottom: "40px", fontWeight: "bold", textShadow: "2px 2px 5px rgba(0,0,0,0.5)" }}>Happy Anniversary</h2>
-              <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 2, delay: 1.5 }}
-                style={{ width: "200px", height: "200px", borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.15)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", border: "2px solid rgba(255,255,255,0.5)", backdropFilter: "blur(10px)", boxShadow: "0 15px 35px rgba(0,0,0,0.2)" }}
-              >
-                <span style={{ fontSize: "4rem", fontWeight: "bold", textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}>{days}</span>
-                <span style={{ fontSize: "0.8rem", letterSpacing: "3px", textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>DAYS TOGETHER</span>
-              </motion.div>
-              <p style={{ marginTop: "50px", maxWidth: "650px", fontSize: "1.2rem", fontStyle: "italic", lineHeight: "1.8", opacity: 0.9, textShadow: "1px 1px 3px rgba(0,0,0,0.5)" }}>
-                "Today is a celebration of us, and the beautiful journey we've embarked upon."
-              </p>
-              <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }} style={{ marginTop: "60px", opacity: 0.9, textShadow: "1px 1px 3px rgba(0,0,0,0.5)" }}> ↓ Scroll Down My Love ↓ </motion.div>
+            <section style={{ height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "20px" }}>
+              <div style={{ padding: "40px", background: "transparent", maxWidth: "800px", margin: "0 auto", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <p style={{ letterSpacing: "6px", marginBottom: "20px", fontWeight: "800", textTransform: "uppercase", ...glowingText }}>Dear Intan,</p>
+                <h2 style={{ fontSize: "clamp(2.5rem, 8vw, 4rem)", marginBottom: "40px", fontWeight: "900", ...glowingText }}>Happy Anniversary</h2>
+                
+                <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 2, delay: 1 }}
+                  style={{ width: "180px", height: "180px", borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.4)", backdropFilter: "blur(5px)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", boxShadow: "0 0 30px rgba(255,255,255,0.5)", border: "2px solid rgba(255,255,255,0.8)" }}
+                >
+                  <span style={{ fontSize: "4rem", fontWeight: "bold", lineHeight: "1", ...glowingText }}>{days}</span>
+                  <span style={{ fontSize: "0.8rem", letterSpacing: "3px", fontWeight: "800", marginTop: "5px", ...glowingText }}>DAYS</span>
+                </motion.div>
+                
+                <p style={{ marginTop: "40px", fontSize: "1.2rem", fontStyle: "italic", lineHeight: "1.8", fontWeight: "700", ...glowingText }}>
+                  "Today is a celebration of us, and the beautiful journey we've embarked upon."
+                </p>
+              </div>
+
+              <motion.div animate={{ y: [0, 15, 0] }} transition={{ duration: 2, repeat: Infinity }} style={{ marginTop: "50px", fontWeight: "800", letterSpacing: "1px", ...glowingText }}> ↓ Scroll Down My Love ↓ </motion.div>
             </section>
 
-            {/* STORIES SECTION */}
-            <section style={{ padding: "80px 20px", maxWidth: "1100px", margin: "0 auto", backgroundColor: "rgba(0,0,0,0.3)", borderRadius: "20px", marginTop: "20px" }}>
+            <section style={{ padding: "80px 20px", maxWidth: "1000px", margin: "0 auto", position: "relative", zIndex: 5 }}>
               {DATA.stories.map((item, index) => (
-                <motion.div key={index} initial={{ opacity: 0, y: 80 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 1.5, ease: "easeOut" }}
-                  style={{ display: "flex", flexDirection: window.innerWidth < 768 ? "column" : index % 2 === 0 ? "row" : "row-reverse", alignItems: "center", gap: "60px", marginBottom: "150px" }}
+                <motion.div key={index} initial={{ opacity: 0, y: 80 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 1.2, ease: "easeOut" }}
+                  style={{ display: "flex", flexDirection: window.innerWidth < 768 ? "column" : index % 2 === 0 ? "row" : "row-reverse", alignItems: "center", gap: "50px", marginBottom: "120px" }}
                 >
                   <div style={{ flex: 1, width: "100%" }}>
-                    <motion.div whileHover={{ scale: 1.02 }} style={{ backgroundColor: "rgba(255,255,255,0.1)", padding: "15px", borderRadius: "10px", boxShadow: "0 15px 40px rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.3)", backdropFilter: "blur(5px)" }}>
-                      <img src={item.img} alt="Memories" style={{ width: "100%", height: "450px", objectFit: "cover", borderRadius: "4px" }} />
+                    <motion.div whileHover={{ scale: 1.03, rotate: index % 2 === 0 ? 2 : -2 }} style={{ backgroundColor: "transparent", padding: "0", transform: `rotate(${index % 2 === 0 ? '-3deg' : '3deg'})` }}>
+                      <img src={item.img} alt="Memories" style={{ width: "100%", height: "400px", objectFit: "cover", borderRadius: "20px", boxShadow: "0 20px 40px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.4)" }} />
                     </motion.div>
                   </div>
+                  
                   <div style={{ flex: 1.2, textAlign: index % 2 === 0 ? "left" : "right" }}>
-                    <p style={{ fontSize: "1.35rem", lineHeight: "2", backgroundColor: "rgba(0,0,0,0.4)", padding: "35px", borderRadius: "25px", border: "1px solid rgba(255,255,255,0.2)", backdropFilter: "blur(10px)", textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
+                    <p style={{ fontSize: "1.4rem", lineHeight: "2", backgroundColor: "transparent", padding: "10px", fontWeight: "700", ...glowingText }}>
                       {item.text}
                     </p>
                   </div>
@@ -214,34 +246,33 @@ export default function App() {
               ))}
             </section>
 
-            <footer style={{ padding: "150px 20px", textAlign: "center", background: "linear-gradient(transparent, rgba(0,0,0,0.5))" }}>
+            <footer style={{ padding: "150px 20px", textAlign: "center", position: "relative", zIndex: 5 }}>
               <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 2, repeat: Infinity }} style={{ marginBottom: "30px" }}>
-                <Heart fill="#F8FBF8" size={56} color="#F8FBF8" style={{ filter: "drop-shadow(0px 0px 5px rgba(255,255,255,0.5))" }} />
+                <Heart fill="#6A4C93" size={56} color="#6A4C93" style={{ filter: "drop-shadow(0px 0px 15px rgba(255,255,255,1))" }} />
               </motion.div>
-              <h3 style={{ fontSize: "2.5rem", marginBottom: "15px", textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}>I Love You, {DATA.recipient}</h3>
-              <p style={{ fontSize: "1.1rem", opacity: 0.9, textShadow: "1px 1px 3px rgba(0,0,0,0.5)" }}>Always and Forever.</p>
-              <div style={{ marginTop: "100px", fontSize: "0.8rem", opacity: 0.7, textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}> Made with ❤️ by Prasetiyo </div>
+              <h3 style={{ fontSize: "2.5rem", marginBottom: "15px", fontWeight: "900", ...glowingText }}>I Love You, {DATA.recipient}</h3>
+              <p style={{ fontSize: "1.2rem", fontWeight: "800", ...glowingText }}>Always and Forever.</p>
+              <div style={{ marginTop: "100px", fontSize: "0.9rem", fontWeight: "700", opacity: 0.9, ...glowingText }}> Made with ❤️ by Prasetiyo </div>
             </footer>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* FINAL POP-UP */}
       <AnimatePresence>
         {showPopUp && (
           <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             transition={{ duration: 1.2 }}
-            style={{ position: 'fixed', inset: 0, zIndex: 2000, backgroundColor: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', backdropFilter: 'blur(8px)' }}
+            style={{ position: 'fixed', inset: 0, zIndex: 2000, backgroundColor: 'rgba(255,255,255,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', backdropFilter: 'blur(10px)' }}
           >
             <motion.div 
-              initial={{ scale: 0.7, y: 20, opacity: 0 }} animate={{ scale: 1, y: 0, opacity: 1 }}
+              initial={{ scale: 0.8, y: 30, opacity: 0 }} animate={{ scale: 1, y: 0, opacity: 1 }}
               transition={{ duration: 1, ease: "easeOut" }}
-              style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', color: '#333', padding: '40px', borderRadius: '30px', textAlign: 'center', maxWidth: '400px', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}
+              style={{ backgroundColor: 'rgba(255,255,255,0.85)', color: '#6A4C93', padding: '50px 40px', borderRadius: '30px', textAlign: 'center', maxWidth: '450px', boxShadow: '0 30px 60px rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.9)' }}
             >
-              <Heart fill="#E74C3C" size={48} style={{ marginBottom: '20px', margin: '0 auto' }} />
-              <h2 style={{ fontSize: '1.8rem', marginBottom: '20px' }}>One last thing...</h2>
-              <p style={{ marginBottom: '30px', lineHeight: '1.6', color: '#555' }}>Will you continue this beautiful journey with me for the next 365 days and beyond?</p>
+              <Heart fill="#6A4C93" size={50} style={{ marginBottom: '25px', margin: '0 auto' }} />
+              <h2 style={{ fontSize: '2rem', marginBottom: '15px', fontWeight: 'bold' }}>One last thing...</h2>
+              <p style={{ marginBottom: '35px', lineHeight: '1.7', color: '#6A4C93', fontSize: '1.1rem', fontWeight: "600" }}>Will you continue this beautiful journey with me for the next 365 days and beyond?</p>
               <button 
                 onClick={() => {
                   triggerLavenderExplosion();
@@ -249,7 +280,7 @@ export default function App() {
                   setShowPopUp(false);
                   setTimeout(() => alert("I love you more than words can say! My heart is yours forever. ❤️"), 2000);
                 }}
-                style={{ padding: '12px 35px', backgroundColor: '#E74C3C', color: 'white', border: 'none', borderRadius: '25px', fontWeight: 'bold', cursor: 'pointer', boxShadow: "0 4px 15px rgba(231, 76, 60, 0.4)" }}
+                style={{ padding: '15px 40px', backgroundColor: '#6A4C93', color: 'white', border: 'none', borderRadius: '30px', fontWeight: 'bold', cursor: 'pointer', fontSize: '1.1rem', boxShadow: "0 10px 25px rgba(106, 76, 147, 0.4)", transition: 'all 0.3s' }}
               >
                 Yes, I will! ❤️
               </button>
