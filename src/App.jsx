@@ -19,7 +19,7 @@ const DATA = {
   ],
 };
 
-// --- EFEK HUJAN (DIPERJELAS) ---
+// --- EFEK HUJAN ---
 const CustomRainEffect = () => {
   const rainDrops = Array.from({ length: 60 }).map((_, i) => ({
     id: i,
@@ -155,18 +155,17 @@ export default function App() {
     frame();
   };
 
-  // --- WARNA TEKS BARU: Ungu Gelap Lembut ---
   const glowingText = {
-    color: "#6A4C93", // Ungu Gelap Lembut
+    color: "#6A4C93",
     textShadow: "0 0 15px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.8), 1px 1px 2px rgba(255, 255, 255, 1)"
   };
 
   return (
     <div style={{ 
       backgroundImage: "url('/background/bg.png')", 
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundAttachment: "fixed",
+      backgroundSize: "cover", // Membuat background fleksibel memenuhi layar HP maupun PC
+      backgroundPosition: "center center", // Menjaga posisi gambar selalu di tengah
+      backgroundAttachment: "fixed", // Membuat background tetap diam (stay) saat di-scroll
       backgroundRepeat: "no-repeat",
       minHeight: "100vh", 
       fontFamily: "'Playfair Display', serif", 
@@ -193,7 +192,8 @@ export default function App() {
               position: "fixed", inset: 0, zIndex: 100, 
               backgroundColor: "rgba(255, 255, 255, 0.3)", 
               backdropFilter: "blur(5px)", 
-              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" 
+              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center",
+              padding: "20px"
             }}
           >
             <motion.h1 initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.8 }} style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", marginBottom: "30px", fontWeight: "800", letterSpacing: "2px", ...glowingText }}>
@@ -207,38 +207,38 @@ export default function App() {
           <motion.div key="content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 3.5, delay: 0.5 }}>
             
             <section style={{ height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "20px" }}>
-              <div style={{ padding: "40px", background: "transparent", maxWidth: "800px", margin: "0 auto", display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <div style={{ padding: "20px", background: "transparent", maxWidth: "800px", width: "100%", margin: "0 auto", display: "flex", flexDirection: "column", alignItems: "center" }}>
                 <p style={{ letterSpacing: "6px", marginBottom: "20px", fontWeight: "800", textTransform: "uppercase", ...glowingText }}>Dear Intan,</p>
-                <h2 style={{ fontSize: "clamp(2.5rem, 8vw, 4rem)", marginBottom: "40px", fontWeight: "900", ...glowingText }}>Happy Anniversary</h2>
+                <h2 style={{ fontSize: "clamp(2rem, 7vw, 4rem)", marginBottom: "30px", fontWeight: "900", ...glowingText }}>Happy Anniversary</h2>
                 
                 <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 2, delay: 1 }}
-                  style={{ width: "180px", height: "180px", borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.4)", backdropFilter: "blur(5px)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", boxShadow: "0 0 30px rgba(255,255,255,0.5)", border: "2px solid rgba(255,255,255,0.8)" }}
+                  style={{ width: "160px", height: "160px", borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.4)", backdropFilter: "blur(5px)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", boxShadow: "0 0 30px rgba(255,255,255,0.5)", border: "2px solid rgba(255,255,255,0.8)" }}
                 >
-                  <span style={{ fontSize: "4rem", fontWeight: "bold", lineHeight: "1", ...glowingText }}>{days}</span>
+                  <span style={{ fontSize: "3.5rem", fontWeight: "bold", lineHeight: "1", ...glowingText }}>{days}</span>
                   <span style={{ fontSize: "0.8rem", letterSpacing: "3px", fontWeight: "800", marginTop: "5px", ...glowingText }}>DAYS</span>
                 </motion.div>
                 
-                <p style={{ marginTop: "40px", fontSize: "1.2rem", fontStyle: "italic", lineHeight: "1.8", fontWeight: "700", ...glowingText }}>
+                <p style={{ marginTop: "30px", fontSize: "1.1rem", fontStyle: "italic", lineHeight: "1.6", fontWeight: "700", ...glowingText, padding: "0 10px" }}>
                   "Today is a celebration of us, and the beautiful journey we've embarked upon."
                 </p>
               </div>
 
-              <motion.div animate={{ y: [0, 15, 0] }} transition={{ duration: 2, repeat: Infinity }} style={{ marginTop: "50px", fontWeight: "800", letterSpacing: "1px", ...glowingText }}> ↓ Scroll Down My Love ↓ </motion.div>
+              <motion.div animate={{ y: [0, 15, 0] }} transition={{ duration: 2, repeat: Infinity }} style={{ marginTop: "30px", fontWeight: "800", letterSpacing: "1px", ...glowingText }}> ↓ Scroll Down My Love ↓ </motion.div>
             </section>
 
-            <section style={{ padding: "80px 20px", maxWidth: "1000px", margin: "0 auto", position: "relative", zIndex: 5 }}>
+            <section style={{ padding: "40px 20px", maxWidth: "900px", margin: "0 auto", position: "relative", zIndex: 5 }}>
               {DATA.stories.map((item, index) => (
                 <motion.div key={index} initial={{ opacity: 0, y: 80 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 1.2, ease: "easeOut" }}
-                  style={{ display: "flex", flexDirection: window.innerWidth < 768 ? "column" : index % 2 === 0 ? "row" : "row-reverse", alignItems: "center", gap: "50px", marginBottom: "120px" }}
+                  style={{ display: "flex", flexDirection: window.innerWidth < 768 ? "column" : index % 2 === 0 ? "row" : "row-reverse", alignItems: "center", gap: "40px", marginBottom: "100px" }}
                 >
                   <div style={{ flex: 1, width: "100%" }}>
-                    <motion.div whileHover={{ scale: 1.03, rotate: index % 2 === 0 ? 2 : -2 }} style={{ backgroundColor: "transparent", padding: "0", transform: `rotate(${index % 2 === 0 ? '-3deg' : '3deg'})` }}>
-                      <img src={item.img} alt="Memories" style={{ width: "100%", height: "400px", objectFit: "cover", borderRadius: "20px", boxShadow: "0 20px 40px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.4)" }} />
+                    <motion.div whileHover={{ scale: 1.03 }} style={{ backgroundColor: "transparent", padding: "0" }}>
+                      <img src={item.img} alt="Memories" style={{ width: "100%", height: "auto", maxHeight: "450px", objectFit: "cover", borderRadius: "20px", boxShadow: "0 20px 40px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.4)" }} />
                     </motion.div>
                   </div>
                   
-                  <div style={{ flex: 1.2, textAlign: index % 2 === 0 ? "left" : "right" }}>
-                    <p style={{ fontSize: "1.4rem", lineHeight: "2", backgroundColor: "transparent", padding: "10px", fontWeight: "700", ...glowingText }}>
+                  <div style={{ flex: 1.2, textAlign: window.innerWidth < 768 ? "center" : index % 2 === 0 ? "left" : "right", width: "100%" }}>
+                    <p style={{ fontSize: "1.2rem", lineHeight: "1.8", backgroundColor: "transparent", padding: "10px", fontWeight: "700", ...glowingText }}>
                       {item.text}
                     </p>
                   </div>
@@ -246,13 +246,13 @@ export default function App() {
               ))}
             </section>
 
-            <footer style={{ padding: "150px 20px", textAlign: "center", position: "relative", zIndex: 5 }}>
-              <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 2, repeat: Infinity }} style={{ marginBottom: "30px" }}>
-                <Heart fill="#6A4C93" size={56} color="#6A4C93" style={{ filter: "drop-shadow(0px 0px 15px rgba(255,255,255,1))" }} />
+            <footer style={{ padding: "100px 20px", textAlign: "center", position: "relative", zIndex: 5 }}>
+              <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 2, repeat: Infinity }} style={{ marginBottom: "20px" }}>
+                <Heart fill="#6A4C93" size={48} color="#6A4C93" style={{ filter: "drop-shadow(0px 0px 15px rgba(255,255,255,1))" }} />
               </motion.div>
-              <h3 style={{ fontSize: "2.5rem", marginBottom: "15px", fontWeight: "900", ...glowingText }}>I Love You, {DATA.recipient}</h3>
-              <p style={{ fontSize: "1.2rem", fontWeight: "800", ...glowingText }}>Always and Forever.</p>
-              <div style={{ marginTop: "100px", fontSize: "0.9rem", fontWeight: "700", opacity: 0.9, ...glowingText }}> Made with ❤️ by Prasetiyo </div>
+              <h3 style={{ fontSize: "2rem", marginBottom: "10px", fontWeight: "900", ...glowingText }}>I Love You, {DATA.recipient}</h3>
+              <p style={{ fontSize: "1.1rem", fontWeight: "800", ...glowingText }}>Always and Forever.</p>
+              <div style={{ marginTop: "60px", fontSize: "0.8rem", fontWeight: "700", opacity: 0.9, ...glowingText }}> Made with ❤️ by Prasetiyo </div>
             </footer>
           </motion.div>
         )}
@@ -268,11 +268,11 @@ export default function App() {
             <motion.div 
               initial={{ scale: 0.8, y: 30, opacity: 0 }} animate={{ scale: 1, y: 0, opacity: 1 }}
               transition={{ duration: 1, ease: "easeOut" }}
-              style={{ backgroundColor: 'rgba(255,255,255,0.85)', color: '#6A4C93', padding: '50px 40px', borderRadius: '30px', textAlign: 'center', maxWidth: '450px', boxShadow: '0 30px 60px rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.9)' }}
+              style={{ backgroundColor: 'rgba(255,255,255,0.85)', color: '#6A4C93', padding: '40px 30px', borderRadius: '30px', textAlign: 'center', maxWidth: '400px', width: '100%', boxShadow: '0 30px 60px rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.9)' }}
             >
-              <Heart fill="#6A4C93" size={50} style={{ marginBottom: '25px', margin: '0 auto' }} />
-              <h2 style={{ fontSize: '2rem', marginBottom: '15px', fontWeight: 'bold' }}>One last thing...</h2>
-              <p style={{ marginBottom: '35px', lineHeight: '1.7', color: '#6A4C93', fontSize: '1.1rem', fontWeight: "600" }}>Will you continue this beautiful journey with me for the next 365 days and beyond?</p>
+              <Heart fill="#6A4C93" size={45} style={{ marginBottom: '20px', margin: '0 auto' }} />
+              <h2 style={{ fontSize: '1.7rem', marginBottom: '15px', fontWeight: 'bold' }}>One last thing...</h2>
+              <p style={{ marginBottom: '30px', lineHeight: '1.6', color: '#6A4C93', fontSize: '1rem', fontWeight: "600" }}>Will you continue this beautiful journey with me for the next 365 days and beyond?</p>
               <button 
                 onClick={() => {
                   triggerLavenderExplosion();
@@ -280,7 +280,7 @@ export default function App() {
                   setShowPopUp(false);
                   setTimeout(() => alert("I love you more than words can say! My heart is yours forever. ❤️"), 2000);
                 }}
-                style={{ padding: '15px 40px', backgroundColor: '#6A4C93', color: 'white', border: 'none', borderRadius: '30px', fontWeight: 'bold', cursor: 'pointer', fontSize: '1.1rem', boxShadow: "0 10px 25px rgba(106, 76, 147, 0.4)", transition: 'all 0.3s' }}
+                style={{ padding: '14px 35px', backgroundColor: '#6A4C93', color: 'white', border: 'none', borderRadius: '30px', fontWeight: 'bold', cursor: 'pointer', fontSize: '1rem', boxShadow: "0 10px 25px rgba(106, 76, 147, 0.4)", transition: 'all 0.3s' }}
               >
                 Yes, I will! ❤️
               </button>
